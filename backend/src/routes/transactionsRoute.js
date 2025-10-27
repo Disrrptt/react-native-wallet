@@ -8,9 +8,12 @@ import {
 
 const router = express.Router();
 
+// health da feature (opcional)
+router.get("/health", (_req, res) => res.json({ ok: true, feature: "transactions" }));
+
+router.get("/summary/:userId", getSummaryByUserId); // <- antes
 router.get("/:userId", getTransactionsByUserId);
 router.post("/", createTransaction);
 router.delete("/:id", deleteTransaction);
-router.get("/summary/:userId", getSummaryByUserId);
 
 export default router;

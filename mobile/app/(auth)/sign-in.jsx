@@ -17,33 +17,58 @@ export default function Page() {
 
   // Handle the submission of the sign-in form
   const onSignInPress = async () => {
-    if (!isLoaded) return;
+  if (!isLoaded) return;
 
-    // Start the sign-in process using the email and password provided
-    try {
-      const signInAttempt = await signIn.create({
-        identifier: emailAddress,
-        password,
-      });
+  try {
+    if (signIn && signIn.status === "needs_identifier") await signIn.reload();
+    const attempt = await signIn.create({
+      identifier: emailAddress.trim(),
+      password,
+    });
 
-      // If sign-in process is complete, set the created session as active
-      // and redirect the user
-      if (signInAttempt.status === "complete") {
-        await setActive({ session: signInAttempt.createdSessionId });
-        router.replace("/");
-      } else {
-        // If the status isn't complete, check why. User might need to
-        // complete further steps.
-        console.error(JSON.stringify(signInAttempt, null, 2));
-      }
-    } catch (err) {
-      if (err.errors?.[0]?.code === "form_password_incorrect") {
-        setError("Password is incorrect. Please try again.");
-      } else {
-        setError("An error occurred. Please try again.");
-      }
+    if (attempt.status === "complete") {
+      await setActive({ session: attempt.createdSessionId });
+      router.replace("/");
+      return;
     }
-  };
+
+    if (attempt.status === "needs_identifier") {
+      setError("E-mail não encontrado. Verifique e tente novamente.");
+      return;
+    }
+
+    if (attempt.status === "needs_first_factor") {
+      setError("Por favor, confirme o e-mail antes de fazer login.");
+      return;
+    }
+
+    if (attempt.status === "needs_second_factor") {
+      setError("Verificação em duas etapas necessária.");
+      return;
+    }
+
+    // Fallback: se algo inesperado vier
+    console.warn("SignIn status:", attempt.status);
+    setError("Erro inesperado. Tente novamente mais tarde.");
+  } catch (err) {
+    console.log("Erro no login:", err);
+
+    const code = err?.errors?.[0]?.code;
+
+    if (code === "form_password_incorrect") {
+      setError("Senha incorreta. Tente novamente.");
+    } else if (code === "form_identifier_not_found") {
+      setError("Conta não encontrada. Verifique o e-mail digitado.");
+    } else if (code === "session_exists") {
+      setError("Você já está logado em outro dispositivo.");
+    } else if (code === "form_identifier_exists") {
+      setError("Esse e-mail já está cadastrado.");
+    } else {
+      setError("Erro ao fazer login. Tente novamente.");
+    }
+  }
+};
+
 
   return (
     <KeyboardAwareScrollView
@@ -54,7 +79,7 @@ export default function Page() {
       extraScrollHeight={30}
     >
       <View style={styles.container}>
-        <Image source={require("../../assets/images/revenue-i4.png")} style={styles.illustration} />
+        <Image source={require("../../assets/images/Login-amico.png")} style={styles.illustration} />
         <Text style={styles.title}>Bem vindo de novo!</Text>
 
         {error ? (
@@ -88,6 +113,12 @@ export default function Page() {
         <TouchableOpacity style={styles.button} onPress={onSignInPress}>
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
+
+        <Link href="/forgot-password" asChild>
+          <TouchableOpacity style={{ alignItems: "center", marginBottom: 10 }}>
+            <Text style={styles.linkText}>Esqueceu a senha?</Text>
+          </TouchableOpacity>
+        </Link>
 
         <View style={styles.footerContainer}>
           <Text style={styles.footerText}>Não tem uma conta?</Text>

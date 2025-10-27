@@ -65,26 +65,30 @@ export async function getSummaryByUserId(req, res) {
     const { userId } = req.params;
 
     const balanceResult = await sql`
-      SELECT COALESCE(SUM(amount), 0) as balance FROM transactions WHERE user_id = ${userId}
+      SELECT COALESCE(SUM(amount), 0) AS balance
+      FROM transactions
+      WHERE user_id = ${userId}
     `;
 
     const incomeResult = await sql`
-      SELECT COALESCE(SUM(amount), 0) as income FROM transactions
+      SELECT COALESCE(SUM(amount), 0) AS income
+      FROM transactions
       WHERE user_id = ${userId} AND amount > 0
     `;
 
     const expensesResult = await sql`
-      SELECT COALESCE(SUM(amount), 0) as expenses FROM transactions
+      SELECT COALESCE(SUM(amount), 0) AS expenses
+      FROM transactions
       WHERE user_id = ${userId} AND amount < 0
     `;
 
     res.status(200).json({
-      balance: balanceResult[0].balance,
-      income: incomeResult[0].income,
-      expenses: expensesResult[0].expenses,
+      balance: Number(balanceResult[0].balance) || 0,
+      income: Number(incomeResult[0].income) || 0,
+      expenses: Number(expensesResult[0].expenses) || 0,
     });
   } catch (error) {
-    console.log("Error gettin the summary", error);
+    console.log("Error getting the summary", error);
     res.status(500).json({ message: "Internal server error" });
   }
 }
