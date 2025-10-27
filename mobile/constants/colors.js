@@ -51,11 +51,41 @@ const oceanTheme = {
   shadow: "#000000",
 };
 
+// constants/colors.js
+
+const darkTheme = {
+  // base
+  primary: "#1DB954",
+  background: "#0E0E10",
+  text: "#F5F5F5",
+  textLight: "#C7C7C7",
+  white: "#FFFFFF",
+
+  // inputs/cards/bordas
+  card: "#18181B",
+  border: "#2C2C2E",
+  shadow: "#000000",
+
+  // ações
+  income: "#2ECC71", // confirmar/salvar/adicionar
+  expense: "#E53935", // excluir/sair/cancelar
+
+  // extras pra UX de input
+  inputBg: "#18181B",
+  inputBgEmpty: "#FFFFFF",      // ⚪ estado vazio (placeholder)
+  inputText: "#F5F5F5",
+  inputTextEmpty: "#000000",    // ⚫ placeholder
+  inputBorder: "#2C2C2E",
+  inputBorderFocus: "#1DB954",
+};
+
+
 export const THEMES = {
   coffee: coffeeTheme,
   forest: forestTheme,
   purple: purpleTheme,
   ocean: oceanTheme,
+  dark: darkTheme,
 };
 
-export const COLORS = THEMES.ocean;
+export const COLORS = THEMES.dark;

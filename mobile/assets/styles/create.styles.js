@@ -6,6 +6,8 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
   },
+
+  /* HEADER */
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -19,33 +21,31 @@ export const styles = StyleSheet.create({
     fontWeight: "600",
     color: COLORS.text,
   },
-  backButton: {
-    padding: 5,
-  },
+  backButton: { padding: 5 },
   saveButtonContainer: {
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
   },
-  saveButtonDisabled: {
-    opacity: 0.5,
-  },
-  saveButton: {
-    fontSize: 16,
-    color: COLORS.primary,
-    fontWeight: "600",
-  },
+  saveButtonDisabled: { opacity: 0.5 },
+  saveButton: { fontSize: 16, color: COLORS.income, fontWeight: "600" },
+
+  /* CARD */
   card: {
-    backgroundColor: COLORS.card,
+    backgroundColor: COLORS.card,      // cartão escuro
     margin: 16,
     borderRadius: 16,
     padding: 16,
-    shadowColor: "#000",
+    shadowColor: COLORS.shadow,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
     elevation: 3,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
+
+  /* TIPO (Despesa/Recebido) */
   typeSelector: {
     flexDirection: "row",
     marginBottom: 20,
@@ -60,22 +60,27 @@ export const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 1,
     borderColor: COLORS.border,
+    backgroundColor: "transparent",
   },
-  typeButtonActive: {
-    backgroundColor: COLORS.primary,
-    borderColor: COLORS.primary,
+  // ativa para Despesa (verde conforme padrão de ação confirmatória)
+  typeButtonActiveExpense: {
+    backgroundColor: COLORS.income,
+    borderColor: COLORS.income,
   },
-  typeIcon: {
-    marginRight: 8,
+  // ativa para Recebido (contorno em verde no dark)
+  typeButtonActiveIncome: {
+    backgroundColor: COLORS.card,
+    borderColor: COLORS.income,
   },
+  typeIcon: { marginRight: 8 },
   typeButtonText: {
     color: COLORS.text,
     fontSize: 16,
     fontWeight: "500",
   },
-  typeButtonTextActive: {
-    color: COLORS.white,
-  },
+  typeButtonTextActive: { color: COLORS.white },
+
+  /* VALOR */
   amountContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -96,6 +101,8 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     color: COLORS.text,
   },
+
+  /* TÍTULO */
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -104,17 +111,17 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 4,
     marginBottom: 20,
-    backgroundColor: COLORS.white,
+    backgroundColor: "transparent",    // <– nada de branco aqui
   },
-  inputIcon: {
-    marginHorizontal: 12,
-  },
+  inputIcon: { marginHorizontal: 12 },
   input: {
     flex: 1,
     padding: 12,
     fontSize: 16,
     color: COLORS.text,
   },
+
+  /* CATEGORIA */
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
@@ -137,22 +144,20 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: COLORS.border,
-    backgroundColor: COLORS.white,
+    backgroundColor: "transparent",    // <– sem fundo branco
   },
   categoryButtonActive: {
     backgroundColor: COLORS.primary,
     borderColor: COLORS.primary,
   },
-  categoryIcon: {
-    marginRight: 6,
-  },
+  categoryIcon: { marginRight: 6 },
   categoryButtonText: {
     color: COLORS.text,
     fontSize: 14,
   },
-  categoryButtonTextActive: {
-    color: COLORS.white,
-  },
+  categoryButtonTextActive: { color: COLORS.white },
+
+  /* LOADING */
   loadingContainer: {
     padding: 20,
     alignItems: "center",

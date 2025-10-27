@@ -1,10 +1,11 @@
 import { StyleSheet } from "react-native";
 import { COLORS } from "../../constants/colors";
 
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#E9F6FF", // mesmo fundo da home
+    backgroundColor: COLORS.background,
   },
 
   /* HEADER */
@@ -15,7 +16,8 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#DCECF7",
+    borderBottomColor: COLORS.border,
+    backgroundColor: COLORS.card,
   },
   iconBtn: {
     width: 40,
@@ -23,9 +25,9 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#ffffff",
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
+    backgroundColor: COLORS.card,
+    shadowColor: COLORS.shadow,
+    shadowOpacity: 0.2,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
     elevation: 2,
@@ -36,7 +38,7 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     color: COLORS.text,
-    marginRight: 40, // balanceia o espaço do botão salvar
+    marginRight: 40,
   },
   saveBtn: {
     position: "absolute",
@@ -44,17 +46,17 @@ export const styles = StyleSheet.create({
     height: 36,
     paddingHorizontal: 12,
     borderRadius: 18,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.card,
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
+    shadowColor: COLORS.shadow,
+    shadowOpacity: 0.25,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
     elevation: 2,
   },
-  saveBtnDisabled: { opacity: 0.6 },
+  saveBtnDisabled: { opacity: 0.5 },
   saveBtnText: {
     color: COLORS.primary,
     fontWeight: "800",
@@ -83,11 +85,11 @@ export const styles = StyleSheet.create({
     width: 84,
     height: 84,
     borderRadius: 42,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.card,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 3,
-    borderColor: "#B0DBFF",
+    borderWidth: 2,
+    borderColor: COLORS.primary,
   },
   fullName: {
     marginTop: 10,
@@ -98,7 +100,7 @@ export const styles = StyleSheet.create({
   emailText: {
     marginTop: 2,
     fontSize: 14,
-    color: "#6B93AF",
+    color: COLORS.textLight,
   },
 
   /* CARD FORM */
@@ -106,13 +108,13 @@ export const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 12,
     padding: 16,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.card,
     borderRadius: 18,
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
+    shadowColor: COLORS.shadow,
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
-    elevation: 3,
+    elevation: 2,
   },
   cardTitle: {
     fontSize: 18,
@@ -129,23 +131,22 @@ export const styles = StyleSheet.create({
   },
   input: {
     height: 52,
-    backgroundColor: "#F4FAFF",
+    backgroundColor: COLORS.inputBg,
     borderWidth: 1,
-    borderColor: "#CBE6FB",
+    borderColor: COLORS.border,
     borderRadius: 16,
     paddingHorizontal: 14,
     fontSize: 16,
-    color: COLORS.text,
+    color: COLORS.inputText,
   },
   inputDisabled: {
-    backgroundColor: "#DFF0FF",
-    borderColor: "#CBE6FB",
-    color: "#6B93AF",
+    backgroundColor: COLORS.border,
+    color: COLORS.textLight,
   },
   helper: {
     marginTop: 6,
     fontSize: 12.5,
-    color: "#6B93AF",
+    color: COLORS.textLight,
   },
 
   /* DANGER */
@@ -154,10 +155,10 @@ export const styles = StyleSheet.create({
     marginTop: 14,
     marginBottom: 24,
     padding: 16,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.card,
     borderRadius: 18,
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
+    shadowColor: COLORS.shadow,
+    shadowOpacity: 0.1,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 4 },
     elevation: 3,
@@ -174,7 +175,7 @@ export const styles = StyleSheet.create({
     height: 48,
     paddingHorizontal: 12,
     borderRadius: 12,
-    backgroundColor: "#FFF1F1",
+    backgroundColor: "#2B1C1C",
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
@@ -185,3 +186,4 @@ export const styles = StyleSheet.create({
     fontSize: 15,
   },
 });
+

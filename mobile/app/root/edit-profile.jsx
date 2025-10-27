@@ -16,6 +16,7 @@ import { useState, useEffect, useMemo } from "react";
 import { styles } from "../../assets/styles/profile.styles";
 import { COLORS } from "../../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
+import TextField from "../../components/TextField";
 
 export default function EditProfileScreen() {
   const router = useRouter();
@@ -127,38 +128,30 @@ export default function EditProfileScreen() {
             {/* Nome */}
             <View style={styles.field}>
               <Text style={styles.label}>Nome</Text>
-              <TextInput
-                style={styles.input}
+              <TextField
                 value={firstName}
-                placeholder="Digite seu nome"
-                placeholderTextColor={COLORS.textLight}
                 onChangeText={setFirstName}
-                returnKeyType="next"
+                placeholder="Digite seu nome"
               />
             </View>
 
             {/* Sobrenome */}
             <View style={styles.field}>
               <Text style={styles.label}>Sobrenome</Text>
-              <TextInput
-                style={styles.input}
+              <TextField
                 value={lastName}
-                placeholder="Digite seu sobrenome"
-                placeholderTextColor={COLORS.textLight}
                 onChangeText={setLastName}
-                returnKeyType="next"
+                placeholder="Digite seu sobrenome"
               />
             </View>
 
             {/* E-mail (bloqueado) */}
             <View style={styles.field}>
               <Text style={styles.label}>E-mail</Text>
-              <TextInput
-                style={[styles.input, styles.inputDisabled]}
+              <TextField
                 value={email}
-                editable={false}
                 placeholder="Digite seu e-mail"
-                placeholderTextColor={COLORS.textLight}
+                editable={false}
               />
               <Text style={styles.helper}>
                 O e-mail não pode ser alterado por questões de segurança
@@ -168,12 +161,10 @@ export default function EditProfileScreen() {
             {/* Telefone */}
             <View style={styles.field}>
               <Text style={styles.label}>Telefone</Text>
-              <TextInput
-                style={styles.input}
+              <TextField
                 value={phone}
-                placeholder="Digite seu telefone"
-                placeholderTextColor={COLORS.textLight}
                 onChangeText={setPhone}
+                placeholder="Digite seu telefone"
                 keyboardType="phone-pad"
               />
             </View>
