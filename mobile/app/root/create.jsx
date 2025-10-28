@@ -50,10 +50,9 @@ const CreateScreen = () => {
     if (!selectedCategory) return Alert.alert("Erro", "Selecione uma categoria.");
 
     setIsLoading(true);
+
     try {
-      const formattedAmount = isExpense
-        ? -Math.abs(parseFloat(amount))
-        : Math.abs(parseFloat(amount));
+      const formattedAmount = isExpense ? -Math.abs(parseFloat(amount)) : Math.abs(parseFloat(amount));
 
       const response = await fetch(`${API_URL}/transactions`, {
         method: "POST",
@@ -67,11 +66,22 @@ const CreateScreen = () => {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || "Falha ao criar transação");
+        // 🔧 Lê UMA vez
+        const bodyText = await response.text();
+
+        let msg = `HTTP ${response.status}`;
+        try {
+          const data = JSON.parse(bodyText);
+          msg = data?.message || data?.error || msg;
+        } catch {
+          if (bodyText) msg = bodyText; // não-JSON (HTML, string, etc.)
+        }
+
+        console.log("Create transaction failed:", response.status, msg);
+        throw new Error(msg);
       }
 
-      Alert.alert("Sucesso", "Transação criada com sucesso");
+      Alert.alert("Sucesso", "Transação criada!");
       router.back();
     } catch (error) {
       Alert.alert("Erro", error.message || "Falha ao criar transação");
@@ -80,6 +90,7 @@ const CreateScreen = () => {
       setIsLoading(false);
     }
   };
+
 
   return (
     <View style={styles.container}>

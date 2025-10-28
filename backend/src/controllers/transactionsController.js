@@ -29,13 +29,13 @@ export async function createTransaction(req, res) {
       RETURNING *
     `;
 
-    console.log(transaction);
-    res.status(201).json(transaction[0]);
+    return res.status(201).json(transaction[0]);
   } catch (error) {
-    console.log("Error creating the transaction", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error creating the transaction", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
+
 
 export async function deleteTransaction(req, res) {
   try {
