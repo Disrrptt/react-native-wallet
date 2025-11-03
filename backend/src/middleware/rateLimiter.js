@@ -1,60 +1,52 @@
 // middleware/rateLimiter.js
-import ratelimit from "../config/upstash.js";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
-const isDev = process.env.NODE_ENV !== "production";
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
 
-// helper para identificar o cliente
-function getIdentifier(req) {
-  // se você tiver auth no backend, use o id do usuário autenticado
-  const userId =
-    req.headers["x-user-id"] || req.body?.user_id || req.query?.user_id || null;
+// Ex.: 50 req a cada 10 segundos (ajuste conforme necessário)
+const limiter = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(50, "10 s"),
+});
 
-  // fallback por IP (Render/Proxy)
-  const ip =
-    req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
-    req.ip ||
-    req.connection?.remoteAddress ||
-    "unknown";
-
-  return userId || ip;
-}
-
-const rateLimiter = async (req, res, next) => {
+export default async function rateLimiter(req, res, next) {
   try {
-    // bypass em dev e rota de health
-    if (isDev || req.path === "/api/health") return next();
+    // bypass para ambientes/local/health/options
+    if (process.env.NODE_ENV !== "production") return next();
+    if (req.method === "OPTIONS") return next();
+    if (req.path === "/api/health") return next();
 
-    const id = getIdentifier(req);
-    // chave por cliente + método + caminho (assim POST /transactions não “gasta” o GET /transactions)
-    const key = `rl:${id}:${req.method}:${req.path}`;
+    // gere uma chave estável por usuário/rota/ip
+    // se você usa Clerk no backend, passe userId em header (opcional)
+    const userId = req.header("x-user-id") || "anon";
+    const ip =
+      req.header("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.ip ||
+      "unknown";
 
-    const result = await ratelimit.limit(key);
-    const { success, limit, remaining, reset } = result ?? {};
+    const key = `${userId}:${ip}:${req.method}:${req.path}`;
 
-    // adiciona headers padrão de rate limit
-    if (limit != null) res.setHeader("X-RateLimit-Limit", limit);
-    if (remaining != null) res.setHeader("X-RateLimit-Remaining", remaining);
-    if (reset != null) {
-      // segundos até reset
-      const retryAfter = Math.max(0, Math.ceil(reset - Date.now() / 1000));
-      res.setHeader("X-RateLimit-Reset", reset);
-      res.setHeader("Retry-After", retryAfter);
-    }
+    const result = await limiter.limit(key);
 
-    if (!success) {
+    // Cabeçalhos úteis p/ observabilidade
+    res.setHeader("X-RateLimit-Limit", result.limit.toString());
+    res.setHeader("X-RateLimit-Remaining", result.remaining.toString());
+    res.setHeader("X-RateLimit-Reset", result.reset.toString());
+
+    if (!result.success) {
       return res.status(429).json({
-        message: "Too many requests, please try again later.",
+        message: "Too many requests. Try again in a few seconds.",
       });
     }
 
     next();
-  } catch (error) {
-    console.error("Rate limit error:", error);
-    // garante JSON mesmo se o Upstash falhar
-    return res.status(503).json({
-      message: "Rate limit service unavailable. Please try again shortly.",
-    });
+  } catch (err) {
+    // Se a Upstash der 503/timeout, NÃO quebra o app.
+    console.error("Rate limit error (bypassed):", err?.message || err);
+    next();
   }
-};
-
-export default rateLimiter;
+}

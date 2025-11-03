@@ -50,42 +50,47 @@ const CreateScreen = () => {
     if (!selectedCategory) return Alert.alert("Erro", "Selecione uma categoria.");
 
     setIsLoading(true);
-
     try {
       const formattedAmount = isExpense ? -Math.abs(parseFloat(amount)) : Math.abs(parseFloat(amount));
 
       const response = await fetch(`${API_URL}/transactions`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          // opcional: enviar userId p/ chavear rate limit por usuário
+          "x-user-id": user?.id || "anon",
+        },
         body: JSON.stringify({
           user_id: user.id,
-          title: title.trim(),
+          title,
           amount: formattedAmount,
           category: selectedCategory,
         }),
       });
 
       if (!response.ok) {
-        // 🔧 Lê UMA vez
-        const bodyText = await response.text();
-
-        let msg = `HTTP ${response.status}`;
+        // tenta ler json, mas cuidado para não ler 2x
+        let msg = `${response.status} ${response.statusText}`;
         try {
-          const data = JSON.parse(bodyText);
-          msg = data?.message || data?.error || msg;
-        } catch {
-          if (bodyText) msg = bodyText; // não-JSON (HTML, string, etc.)
-        }
+          const err = await response.json();
+          if (err?.message) msg = err.message;
+        } catch { }
 
-        console.log("Create transaction failed:", response.status, msg);
+        if (response.status === 429 || response.status === 503) {
+          Alert.alert(
+            "Muitas requisições",
+            "Você fez muitas ações em sequência. Tente novamente em alguns segundos."
+          );
+        } else {
+          Alert.alert("Erro", msg || "Falha ao criar transação");
+        }
         throw new Error(msg);
       }
 
-      Alert.alert("Sucesso", "Transação criada!");
+      Alert.alert("Sucesso", "Transação criada com sucesso!");
       router.back();
     } catch (error) {
-      Alert.alert("Erro", error.message || "Falha ao criar transação");
-      console.error("Error creating transaction:", error);
+      console.error("Create transaction failed:", error?.message || error);
     } finally {
       setIsLoading(false);
     }

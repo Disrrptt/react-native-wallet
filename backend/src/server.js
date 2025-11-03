@@ -12,7 +12,9 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 // Render/Proxy friendly
-app.set("trust proxy", 1);
+app.set("trust proxy", 1); // importante no Render p/ capturar IP correto
+app.use(rateLimiter);
+
 
 // (Opcional) cron só em produção
 if (process.env.NODE_ENV === "production") job.start();

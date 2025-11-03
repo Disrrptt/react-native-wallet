@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === "production") job.start();
 app.use(rateLimiter);
 app.use(express.json());
 
-// our custom simple middleware
+// our custom simple middlewarew
 // app.use((req, res, next) => {
 //   console.log("Hey we hit a req, the method is", req.method);
 //   next();
