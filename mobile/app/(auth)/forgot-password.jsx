@@ -66,9 +66,19 @@ export default function ForgotPasswordPage() {
           </View>
         ) : null}
 
-        <Text style={styles.helperText}>
-          Digite seu e-mail e enviaremos instruções para redefinir sua senha
+        <Text
+          style={{
+            color: "#E5E7EB", // cinza claro padronizado
+            fontSize: 16,
+            textAlign: "center",
+            marginTop: 8,
+            marginBottom: 20,
+            lineHeight: 22,
+          }}
+        >
+          Digite seu e-mail e enviaremos instruções para redefinir sua senha.
         </Text>
+
 
         <TextInput
           style={styles.input}
